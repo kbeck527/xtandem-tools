@@ -2,6 +2,11 @@ import os
 import glob
 import argparse
 
+# todo set up option h for usage
+
+# Usage: generate_tandem.py <directory><fasta_path>
+#
+
 def generate_taxonomy(directory,fasta_path,use_crap=False):
 	input_path = os.path.join(directory,'taxonomy.xml')
 	input_xml = open(input_path,'w')
