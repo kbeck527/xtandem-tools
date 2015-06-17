@@ -76,16 +76,14 @@ def generate_qsub_script(directory, threads, resources, number_of_jobs):
 # Create a bash array of all input files 
 SAMPLE_LIST="$(find %(directory)s -type f -name '*input.xml')"
 
-# Get index from $SGE_TASK_ID
-INDEX=$((SGE_TASK_ID-1))
-
-# Get file name from the array index
-INPUT_FILE=${SAMPLE_LIST[$INDEX]}
-
-echo $INPUT_FILE
-source /etc/profile.d/modules_bash.sh
+# source /etc/profile.d/modules_bash.sh # leftpver from Adam's version...is this necessary? TODO
 module load tandem
-tandem.exe $INPUT_FILE
+
+# Run each input through tandem
+for FILE in $SAMPLE_LIST
+do
+	tandem.exe $FILE
+done
 """
 	script.write(script_text % {'number_of_jobs':number_of_jobs,'threads':threads,'directory':directory,'resources':resources})
 	
