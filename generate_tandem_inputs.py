@@ -70,11 +70,11 @@ def generate_qsub_script(directory, threads, resources, number_of_jobs):
 #$ -q all.q
 #$ -j y
 #$ -l %(resources)s
-#$ -N %(directory)s
-#$ -e logs
-#$ -o logs
+##$ -N %(directory)s
+##$ -e logs
+##$ -o logs
 # Create a bash array of all input files 
-SAMPLE_LIST=(*.input.xml)
+SAMPLE_LIST="$(find %(directory)s -type f -name '*input.xml')"
 
 # Get index from $SGE_TASK_ID
 INDEX=$((SGE_TASK_ID-1))
