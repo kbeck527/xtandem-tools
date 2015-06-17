@@ -32,7 +32,7 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 	#default_relpath = os.path.relpath(default_path,directory)
 	input_path = os.path.join(directory,mzml+'.input.xml')
 	taxonomy_path = os.path.join(directory,'taxonomy.xml')
-	output = mzml+'.output.xml'
+	output = os.path.join(directory,mzml+'.output.xml')
 	input_xml = open(input_path,'w')
 	input_xml_text = """<?xml version="1.0" encoding="iso-8859-1" ?>
 <bioml>
