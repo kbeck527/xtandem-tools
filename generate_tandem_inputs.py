@@ -61,7 +61,9 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 
 
 def generate_qsub_script(directory, threads, resources, number_of_jobs):
-	script = open(os.path.join(directory,'tandem_qsub_script'),'w')
+	job_name = directory.split('/')
+	job_name = job_name[-1] # take the last folder from the output directory to be the job name
+	script = open(os.path.join(directory,'tandem_qsub.bash'),'w')
 	script_text = """#!/bin/bash
 #$ -S /bin/bash
 #$ -V
@@ -70,13 +72,12 @@ def generate_qsub_script(directory, threads, resources, number_of_jobs):
 #$ -q all.q
 #$ -j y
 #$ -l %(resources)s
-##$ -N %(directory)s
+#$ -N %(job_name)s
 ##$ -e logs
 ##$ -o logs
 # Create a bash array of all input files 
 SAMPLE_LIST="$(find %(directory)s -type f -name '*input.xml')"
 
-# source /etc/profile.d/modules_bash.sh # leftpver from Adam's version...is this necessary? TODO
 module load tandem
 
 # Run each input through tandem
@@ -85,7 +86,7 @@ do
 	tandem.exe $FILE
 done
 """
-	script.write(script_text % {'number_of_jobs':number_of_jobs,'threads':threads,'directory':directory,'resources':resources})
+	script.write(script_text % {'number_of_jobs':number_of_jobs,'job_name':job_name,'threads':threads,'directory':directory,'resources':resources})
 	
 
 def generate_files(options):
