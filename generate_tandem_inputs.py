@@ -31,6 +31,7 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 	#mzml_relpath = os.path.relpath(mzml_path,directory)
 	#default_relpath = os.path.relpath(default_path,directory)
 	input_path = os.path.join(directory,mzml+'.input.xml')
+	taxonomy_path = os.path.join(directory,'taxonomy.xml')
 	output = mzml+'.output.xml'
 	input_xml = open(input_path,'w')
 	input_xml_text = """<?xml version="1.0" encoding="iso-8859-1" ?>
@@ -40,7 +41,7 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 <note type="input" label="spectrum, skyline path">%(mzml_path)s</note>
 <note type="input" label="list path, default parameters">%(default_file)s</note>
 <note type="input" label="output, path">%(output_path)s</note>
-<note type="input" label="list path, taxonomy information">taxonomy.xml</note>
+<note type="input" label="list path, taxonomy information">%(taxonomy_path)s</note>
 <note type="input" label="protein, taxon">refseq</note>
 %(extra)s
 </bioml>
@@ -50,11 +51,12 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 #		extra += '<note type="input" label="list path, taxonomy information">%s</note>' % taxonomy_file_path 
 	
 	subs = {'output_path': output,
-			'default_file': default_path,
-			'mzml_path': mzml_path,
-			'extra': extra,
-            'threads': threads,
-			}
+		'default_file': default_path,
+		'mzml_path': mzml_path,
+		'extra': extra,
+            	'threads': threads,
+		'taxonomy_path': taxonomy_path
+		}
 	
 	input_xml.write(input_xml_text % subs)
 	input_xml.close()
