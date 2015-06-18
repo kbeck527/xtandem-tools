@@ -62,7 +62,7 @@ def generate_input_file(directory,mzml_path,default_path,threads):
 	input_xml.close()
 
 
-def generate_qsub_script(directory, threads, resources, number_of_jobs):
+def generate_qsub_script(directory, threads, resources, number_of_jobs, email):
 	job_name = directory.split('/')
 	job_name = job_name[-1] # take the last folder from the output directory to be the job name
 	script = open(os.path.join(directory,'tandem_qsub.bash'),'w')
@@ -77,6 +77,9 @@ def generate_qsub_script(directory, threads, resources, number_of_jobs):
 #$ -N %(job_name)s
 ##$ -e logs
 ##$ -o logs
+#$ -m bea
+#$ -M %(email)s
+
 # Create a bash array of all input files 
 SAMPLE_LIST="$(find %(directory)s -type f -name '*input.xml')"
 
@@ -88,7 +91,7 @@ do
 	tandem.exe $FILE
 done
 """
-	script.write(script_text % {'number_of_jobs':number_of_jobs,'job_name':job_name,'threads':threads,'directory':directory,'resources':resources})
+	script.write(script_text % {'number_of_jobs':number_of_jobs,'job_name':job_name,'threads':threads,'directory':directory,'resources':resources,'email':email})
 	
 
 def generate_files(options):
@@ -106,7 +109,7 @@ def generate_files(options):
 		mzml_path = os.path.abspath(mzml)
 		generate_input_file(options.directory,mzml_path,default_path,options.threads)
 	#Create shell script to run tandem on all input files as an SGE array job
-	generate_qsub_script(options.directory, options.threads, options.resources, len(mzmls))
+	generate_qsub_script(options.directory, options.threads, options.resources, len(mzmls), options.email)
 
 
 # Define and retrieve command line options for generation of input.xml files
@@ -117,7 +120,8 @@ def main():
 	parser.add_argument('--default_file', required=True, help='The path to the default xml file.')
 	parser.add_argument('--fasta_file', required=True, help='Fasta file')
 	parser.add_argument('--threads', required=False, default=8, type=int, help='The number of threads to run for each X! Tandem job')
-	parser.add_argument('--resources', required=False, default='piledriver', help='The requested resources for the job') 
+	parser.add_argument('--resources', required=False, default='piledriver', help='The requested resources for the job')
+	parser.add_argument('--email', required=False, help='Email address for notification whe  job begins, ends, or aborts')
 #	parser.add_argument('--taxon', required=True, help='Specify the correct reference from the taxonomy.xml file')
 #	parser.add_argument('--taxonomy_file', required=False, help='Optional: The path of the taxonomy xml file if different from the default configuration',default=None)
 	options = parser.parse_args()
