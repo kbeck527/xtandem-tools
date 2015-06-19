@@ -69,7 +69,7 @@ def generate_qsub_script(directory, threads, resources, number_of_jobs, email):
 	script_text = """#!/bin/bash
 #$ -S /bin/bash
 #$ -V
-#$ -t 1-%(number_of_jobs)s
+##$ -t 1-%(number_of_jobs)s
 #$ -pe threaded %(threads)d
 #$ -q all.q
 #$ -j y
