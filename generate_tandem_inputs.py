@@ -114,7 +114,7 @@ def generate_files(options):
 
 # Define and retrieve command line options for generation of input.xml files
 def main():
-	parser = argparse.ArgumentParser(description='Runs xtandem from Genome Center cluster')
+	parser = argparse.ArgumentParser(description='Runs xtandem from Genome Center cluster\n')
 	parser.add_argument('--mzml', required=True, nargs='+', help='An mzML file path.  May use wildcards to use multiple files, such as *.mzML')
 	parser.add_argument('--directory', required=True, help='The name of the directory to output all files to.  The directory will be made if it does not exist.')
 	parser.add_argument('--default_file', required=True, help='The path to the default xml file.')
